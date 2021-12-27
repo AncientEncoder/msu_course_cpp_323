@@ -10,11 +10,13 @@ class Graph {
   void addEdge(int fromVertexId, int toVertexId, const Edge::Color color);
   bool hasVertex(int idFind) const;
   bool isConnected(int fromVertexId, int toVertexId) const;
-  std::vector<int> getVertexIdsAtDepth(int depth);
+  std::vector<int> getVertexIdsAtDepth(int depth) const;
   const std::vector<int>& getEdgesByColor(const Edge::Color& color) const;
   const std::vector<Edge>& getEdges() const;
-  int getDepth();
-  std::vector<int> getConnectedVertexId(int fromVector);
+  int getEdgeId(int fromVertex, int toVertex) const;
+  int getDepth() const;
+  const std::vector<std::pair<int, int>> getConnectedVertex(
+      int fromVector) const;
 
  private:
   const Vertex& getVertex(int id) const;

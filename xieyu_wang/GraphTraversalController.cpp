@@ -2,10 +2,8 @@
 #include <cassert>
 
 #include "GraphTraversalController.hpp"
-#include "GraphTraverser.hpp"
 namespace {
 const int MAX_WORKERS_COUNT = std::thread::hardware_concurrency();
-using uni_course_cpp::GraphTraverser;
 }  // namespace
 
 namespace uni_course_cpp {

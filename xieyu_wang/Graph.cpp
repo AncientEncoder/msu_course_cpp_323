@@ -77,7 +77,7 @@ const Vertex& Graph::getVertex(int id) const {
   throw std::runtime_error("Unreachable code");
 }
 
-std::vector<int> Graph::getVertexIdsAtDepth(int depth) {
+std::vector<int> Graph::getVertexIdsAtDepth(int depth) const{
   if (depth > getDepth()) {
     throw std::runtime_error("depth get error");
   }
@@ -114,23 +114,32 @@ Vertex& Graph::getVertex(int id) {
   return const_cast<Vertex&>(constThis.getVertex(id));
 }
 
-int Graph::getDepth() {
+int Graph::getDepth() const{
   return depthMap_.size() - 1;
 }
 
-std::vector<int> Graph::getConnectedVertexId(int fromVectorId) {
-  std::vector<int> connectedVertexId;
-  Vertex vertex = getVertex(fromVectorId);
-  if (vertex.depth == getDepth()) {
-    throw std::runtime_error("err depth");
-  }
-  const std::vector<int> nextDepthIds = getVertexIdsAtDepth(vertex.depth + 1);
-  for (const auto& vertexId : nextDepthIds) {
-    if (isConnected(fromVectorId, vertexId)) {
-      connectedVertexId.push_back(vertexId);
+    const std::vector<std::pair<int,int>> Graph::getConnectedVertex(int fromVectorId) const{
+    std::vector<std::pair<int,int>> connectedVertex;
+        Vertex vertex= getVertex(fromVectorId);
+        if (vertex.depth==getDepth()){
+            throw std::runtime_error("err depth");
+        }
+        const std::vector<int> nextDepthIds= getVertexIdsAtDepth(vertex.depth+1);
+        for(const auto& vertexId:nextDepthIds){
+            if (isConnected(fromVectorId,vertexId)){
+                connectedVertex.push_back({vertexId, getEdgeId(fromVectorId,vertexId)});
+            }
+        }
+        return connectedVertex;
     }
-  }
-  return connectedVertexId;
-}
+
+    int Graph::getEdgeId(int fromVertex, int toVertex)const {
+        for(const auto&edge:edges_){
+            if (edge.fromVertexId==fromVertex&&edge.toVertexId==toVertex){
+                return edge.id;
+            }
+        }
+        throw std::runtime_error("err to find edge Id");
+    }
 
 }  // namespace uni_course_cpp

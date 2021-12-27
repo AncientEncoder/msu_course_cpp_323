@@ -11,12 +11,12 @@ class GraphTraverser {
  public:
   GraphTraverser(Graph graph) : graph_(graph) {}
 
-  GraphPath find_shortest_path(const int& source_vertex_id,
-                               const int& destination_vertex_id) const;
+  GraphPath find_shortest_path(int source_vertex_id,
+                               int target_vertex_id) const;
   std::vector<GraphPath> find_all_paths() const;
 
  private:
-  Graph& graph_;
+  const Graph& graph_;
 };
 
 }  // namespace uni_course_cpp
