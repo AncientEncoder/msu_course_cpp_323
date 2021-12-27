@@ -14,7 +14,7 @@ class Graph {
   const std::vector<int>& getEdgesByColor(const Edge::Color& color) const;
   const std::vector<Edge>& getEdges() const;
   int getDepth();
-
+  std::vector<int>getConnectedVertexId(int fromVector);
  private:
   const Vertex& getVertex(int id) const;
   Vertex& getVertex(int id);

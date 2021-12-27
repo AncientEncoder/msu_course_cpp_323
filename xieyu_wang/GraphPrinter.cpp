@@ -1,5 +1,6 @@
 #include "GraphPrinter.hpp"
 #include <stdexcept>
+#include <sstream>
 
 namespace uni_course_cpp {
 std::string GraphPrinter::printGraph(const Graph& graph) {
@@ -61,5 +62,23 @@ std::string GraphPrinter::printEdgeColor(const Edge::Color& color) {
   }
   throw std::runtime_error("Failed to convert the color");
 }
+
+    std::string GraphPrinter::printPath(const GraphPath &path) {
+        std::stringstream res;
+
+        res << "{vertices: [";
+
+        const auto& vertexIds = path.get_vertex_ids();
+
+        for(const auto& vertexId:vertexIds){
+            res << vertexId;
+        }
+
+        res << "], distance: ";
+        res << path.distance();
+        res << "}";
+
+        return res.str();
+    }
 
 }  // namespace uni_course_cpp

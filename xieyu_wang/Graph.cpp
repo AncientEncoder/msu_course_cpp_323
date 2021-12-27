@@ -78,10 +78,10 @@ const Vertex& Graph::getVertex(int id) const {
 }
 
 std::vector<int> Graph::getVertexIdsAtDepth(int depth) {
-  if (depth <= depthMap_.size() - 1) {
-    return depthMap_.at(depth);
+  if (depth > getDepth()) {
+    throw std::runtime_error("depth get error");
   }
-  return {};
+  return depthMap_.at(depth);
 }
 
 const std::vector<Vertex>& Graph::getVertices() const {
@@ -116,6 +116,21 @@ Vertex& Graph::getVertex(int id) {
 
 int Graph::getDepth() {
   return depthMap_.size() - 1;
+}
+
+std::vector<int> Graph::getConnectedVertexId(int fromVectorId) {
+  std::vector<int> connectedVertexId;
+  Vertex vertex = getVertex(fromVectorId);
+  if (vertex.depth == getDepth()) {
+    throw std::runtime_error("err depth");
+  }
+  const std::vector<int> nextDepthIds = getVertexIdsAtDepth(vertex.depth + 1);
+  for (const auto& vertexId : nextDepthIds) {
+    if (isConnected(fromVectorId, vertexId)) {
+      connectedVertexId.push_back(vertexId);
+    }
+  }
+  return connectedVertexId;
 }
 
 }  // namespace uni_course_cpp
