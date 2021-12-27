@@ -74,7 +74,6 @@ void writeGraphToFile(const Graph& graph, int index) {
   writePT << GraphPrinter::printGraph(graph) << std::endl;
   writePT.close();
 }
-
 std::vector<Graph> generateGraphs(const GraphGenerator::Params& params,
                                   int graphsCount,
                                   int threadsNum) {
@@ -83,20 +82,18 @@ std::vector<Graph> generateGraphs(const GraphGenerator::Params& params,
 
   auto& logger = Logger::getLogger();
 
-
   std::vector<Graph> graphs;
-
 
   generationController.generate(
       [&logger](int index) { LoggingHelper ::logStart(logger, index); },
       [&logger, &graphs, &params](int index, Graph graph) {
         LoggingHelper ::logEnd(logger, graph, index);
         graphs.push_back(std::move(graph));
-
+        writeGraphToFile(graph, index);
+      });
 
   return graphs;
 }
-
 void traverse_graphs(const std::vector<Graph>& graphs) {
   auto traversal_controller = GraphTraversalController(graphs);
   auto& logger = Logger::getLogger();
@@ -110,7 +107,6 @@ void traverse_graphs(const std::vector<Graph>& graphs) {
         LoggingHelper::endTravel(index, paths, logger);
       });
 }
-
 int main() {
   std::filesystem::create_directory("./temp");
   Logger& logger = Logger::getLogger();
