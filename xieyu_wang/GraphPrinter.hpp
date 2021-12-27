@@ -8,7 +8,7 @@ class GraphPrinter {
   static std::string printVertex(const uni_course_cpp::Vertex& vertex);
   static std::string printEdge(const uni_course_cpp::Edge& edge);
   static std::string printEdgeColor(const uni_course_cpp::Edge::Color& color);
-   static std::string printPath(const GraphPath& path);
+  static std::string printPath(const GraphPath& path);
 };
 
 }  // namespace uni_course_cpp

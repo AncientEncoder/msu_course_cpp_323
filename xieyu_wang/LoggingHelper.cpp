@@ -45,22 +45,24 @@ void LoggingHelper::logEnd(Logger& logger, Graph graph, int graphIndex) {
   logger.log("}\n}\n");
 }
 
-    void LoggingHelper::startTravel(Logger &logger, int index) {
-        logger.log(getTimeByString() + ": Graph " + std::to_string(index + 1) +
-                   ", Traversal Started\n");
-    }
+void LoggingHelper::startTravel(Logger& logger, int index) {
+  logger.log(getTimeByString() + ": Graph " + std::to_string(index + 1) +
+             ", Traversal Started\n");
+}
 
-    void LoggingHelper::endTravel(int index, const std::vector<GraphPath> &paths,Logger& logger) {
-        std::stringstream res;
-        res << getTimeByString << ": Graph " << index + 1
-            << ", Traversal Finished, Paths: [";
+void LoggingHelper::endTravel(int index,
+                              const std::vector<GraphPath>& paths,
+                              Logger& logger) {
+  std::stringstream res;
+  res << getTimeByString << ": Graph " << index + 1
+      << ", Traversal Finished, Paths: [";
 
-        for (const auto& path : paths) {
-            res << "\n  ";
-            res << GraphPrinter::printPath(path);
-            res << ",";
-        }
-        res << "\n]\n";
-        logger.log(res.str());
-    }
+  for (const auto& path : paths) {
+    res << "\n  ";
+    res << GraphPrinter::printPath(path);
+    res << ",";
+  }
+  res << "\n]\n";
+  logger.log(res.str());
+}
 }  // namespace uni_course_cpp

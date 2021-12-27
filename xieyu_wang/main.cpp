@@ -7,9 +7,9 @@
 #include "GraphGenerator.hpp"
 #include "GraphGeneratorController.hpp"
 #include "GraphPrinter.hpp"
+#include "GraphTraversalController.hpp"
 #include "Logger.hpp"
 #include "LoggingHelper.hpp"
-#include "GraphTraversalController.hpp"
 using GraphGenerationController = uni_course_cpp::GraphGenerationController;
 using GraphGenerator = uni_course_cpp::GraphGenerator;
 using Logger = uni_course_cpp::Logger;
@@ -17,7 +17,7 @@ using Graph = uni_course_cpp::Graph;
 using Edge = uni_course_cpp::Edge;
 using LoggingHelper = uni_course_cpp::LoggingHelper;
 using GraphPrinter = uni_course_cpp::GraphPrinter;
-using GraphTraversalController=uni_course_cpp::GraphGenerationController;
+using GraphTraversalController = uni_course_cpp::GraphGenerationController;
 int ctrlMaxDepthEntry() {
   int maxDepth = 0;
   std::cout << "Enter Max Depth:";
@@ -94,16 +94,17 @@ std::map<int, Graph> generateGraphs(const GraphGenerator::Params& params,
   return graphs;
 }
 void traverse_graphs(std::map<int, Graph> graphs, int numThread, int numGraph) {
-    auto traversal_controller = GraphGenerationController(graphs);
-    auto& logger = Logger::getLogger();
+  auto traversal_controller = GraphGenerationController(graphs);
+  auto& logger = Logger::getLogger();
 
-    traversal_controller.traverse(
-            [&logger](int index, const Graph& graph) {
-                LoggingHelper ::startTravel(logger,index);
-            },
-            [&logger](int index, const Graph& graph, std::vector<uni_course_cpp::GraphPath> paths) {
-                LoggingHelper ::endTravel(index, paths,logger);
-            });
+  traversal_controller.traverse(
+      [&logger](int index, const Graph& graph) {
+        LoggingHelper ::startTravel(logger, index);
+      },
+      [&logger](int index, const Graph& graph,
+                std::vector<uni_course_cpp::GraphPath> paths) {
+        LoggingHelper ::endTravel(index, paths, logger);
+      });
 }
 int main() {
   std::filesystem::create_directory("./temp");
@@ -113,6 +114,7 @@ int main() {
   const int newGraphNum = ctrlNewGraphNum();
   const int threadNum = ctrlThreadNum();
   const GraphGenerator::Params params(maxDepth, newVerticesNum);
-    traverse_graphs(generateGraphs(params, newGraphNum, threadNum),threadNum,newGraphNum);
+  traverse_graphs(generateGraphs(params, newGraphNum, threadNum), threadNum,
+                  newGraphNum);
   return 0;
 }
