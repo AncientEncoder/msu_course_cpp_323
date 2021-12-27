@@ -17,7 +17,8 @@ using Graph = uni_course_cpp::Graph;
 using Edge = uni_course_cpp::Edge;
 using LoggingHelper = uni_course_cpp::LoggingHelper;
 using GraphPrinter = uni_course_cpp::GraphPrinter;
-using GraphTraversalController = uni_course_cpp::GraphGenerationController;
+using GraphTraversalController = uni_course_cpp::GraphTraversalController;
+using GraphPath = uni_course_cpp::GraphPath;
 int ctrlMaxDepthEntry() {
   int maxDepth = 0;
   std::cout << "Enter Max Depth:";
@@ -73,37 +74,37 @@ void writeGraphToFile(const Graph& graph, int index) {
   writePT << GraphPrinter::printGraph(graph) << std::endl;
   writePT.close();
 }
-std::map<int, Graph> generateGraphs(const GraphGenerator::Params& params,
-                                    int graphsCount,
-                                    int threadsNum) {
+std::vector<Graph> generateGraphs(const GraphGenerator::Params& params,
+                                  int graphsCount,
+                                  int threadsNum) {
   auto generationController =
       GraphGenerationController(threadsNum, graphsCount, params);
 
   auto& logger = Logger::getLogger();
 
-  auto graphs = std::map<int, Graph>();
+  std::vector<Graph> graphs;
 
   generationController.generate(
       [&logger](int index) { LoggingHelper ::logStart(logger, index); },
       [&logger, &graphs, &params](int index, Graph graph) {
         LoggingHelper ::logEnd(logger, graph, index);
-        graphs.emplace(index, std::move(graph));
+        graphs.push_back(std::move(graph));
         writeGraphToFile(graph, index);
       });
 
   return graphs;
 }
-void traverse_graphs(std::map<int, Graph> graphs, int numThread, int numGraph) {
-  auto traversal_controller = GraphGenerationController(graphs);
+void traverse_graphs(const std::vector<Graph>& graphs) {
+  auto traversal_controller = GraphTraversalController(graphs);
   auto& logger = Logger::getLogger();
 
   traversal_controller.traverse(
       [&logger](int index, const Graph& graph) {
-        LoggingHelper ::startTravel(logger, index);
+        LoggingHelper::startTravel(logger, index);
       },
       [&logger](int index, const Graph& graph,
                 std::vector<uni_course_cpp::GraphPath> paths) {
-        LoggingHelper ::endTravel(index, paths, logger);
+        LoggingHelper::endTravel(index, paths, logger);
       });
 }
 int main() {
@@ -114,7 +115,7 @@ int main() {
   const int newGraphNum = ctrlNewGraphNum();
   const int threadNum = ctrlThreadNum();
   const GraphGenerator::Params params(maxDepth, newVerticesNum);
-  traverse_graphs(generateGraphs(params, newGraphNum, threadNum), threadNum,
-                  newGraphNum);
+  const auto graphs = generateGraphs(params, newGraphNum, threadNum);
+  traverse_graphs(graphs);
   return 0;
 }
